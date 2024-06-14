@@ -1,0 +1,21 @@
+html 
+  head
+    title Users
+    link(href="/favicon.ico" rel="icon" type="image/x-icon")
+    link(rel="stylesheet" href="/styles.css")
+  body 
+    div.navbar
+      a(href="/") Home Page
+      h3 Iconic Actors
+    div#root
+      table.mainTable
+        thead 
+          each headerItem in ["Id", "Name", "Rank", "Rewards"]
+            th(class=headerItem.toLowerCase())= headerItem
+        tbody
+          //- each userItem in locals.users
+          //-   tr
+          //-     td= userItem.id
+          //-     td= userItem.name
+          //-     td= userItem.rank
+          //-     td= userItem.rewards
