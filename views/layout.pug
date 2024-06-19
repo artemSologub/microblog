@@ -1,0 +1,20 @@
+html
+  head
+    title Users
+    link(href="/favicon.ico" rel="icon" type="image/x-icon")
+    link(href="/styles.css" rel="stylesheet")
+    block headContent
+  body
+    div#navbar
+      div.nav-left 
+        a(href="/") Home Page
+        if isLoggedIn === true
+          a(href="/my-posts") My Posts
+          //- a(href="/admin-page") Admin Page
+      div.nav-right
+        if isLoggedIn === true
+          a(href="/logout") Logout
+        else 
+          a(href="/login") Login
+          a(href="/signup") Sign Up
+    block content
