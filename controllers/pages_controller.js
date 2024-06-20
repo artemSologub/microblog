@@ -6,7 +6,7 @@ function renderPage(templateName) {
   };
 }
 
-async function fetchAllPosts(req, resp, next) {
+async function fetchAllPosts(req, _resp, next) {
   const postList = await postService.getAllPosts();
   const modifiedPosts = [...postList];
 
@@ -23,7 +23,7 @@ async function fetchAllPosts(req, resp, next) {
   next();
 }
 
-async function fetchMyPosts(req, resp, next) {
+async function fetchMyPosts(req, _resp, next) {
   const postList = await postService.getMyPosts();
 
   req.__pageContext.postList = postList;
@@ -31,13 +31,11 @@ async function fetchMyPosts(req, resp, next) {
   next();
 }
 
-async function addNewPost(req, resp, next) {
+async function addNewPost(req, _resp, next) {
   try {
     await postService.addNewPost({
       ...req.body,
     });
-
-    resp.redirect(req.baseUrl);
     next();
   } catch (err) {
     next(err);
