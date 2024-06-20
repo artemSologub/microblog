@@ -1,0 +1,29 @@
+extends layout
+
+block headContent
+
+block content
+  h3.padded Posts Dashboard
+  div#root
+    .content 
+      each post in locals.postList
+        .post  
+          .post-author= post.author_id 
+          .post-content= post.content  
+          .post-date-created= post.date_creation 
+          //- .post-comments
+          //-   each comment in locals.post.comments
+          //-     .comment
+
+
+    //- table.mainTable
+    //-   thead
+    //-     each headerItem in ["Content", "Creation Date", "Author ID"]
+    //-       th(class=headerItem.toLowerCase())= headerItem
+    //-   tbody
+    //-     each post in locals.postList
+    //-       tr            
+    //-         td= post.content
+    //-         td= post.date_creation
+    //-         td= post.author_id
+
