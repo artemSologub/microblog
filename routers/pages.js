@@ -43,14 +43,9 @@ pagesRouter.get(
 
 pagesRouter
   .route('/my-posts')
-  // .all(pagesController.fetchMyPosts)
-  .get(pagesController.renderPage('myposts'))
-  .post(
-    formDataParser,
-    pagesController.addNewPost,
-    formErrorHandler,
-    pagesController.renderPage('myposts')
-  );
+  //.all(pagesController.fetchMyPosts)
+  .get(pagesController.fetchMyPosts, pagesController.renderPage('myposts'))
+  .post(formDataParser, pagesController.addNewPost, formErrorHandler);
 
 // pagesRouter.get('/admin-page', (_req, resp) => {
 //   resp.render('index', {});

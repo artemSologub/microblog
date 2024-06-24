@@ -15,3 +15,10 @@ block content
         #titleError.error= errors.content
 
     button(type="submit") Save New POST
+
+  .content 
+      each post in locals.postList
+        .post  
+          .post-author= post.author_id 
+          .post-content= post.content  
+          .post-date-created= post.date_creation 

@@ -12,7 +12,11 @@ function getAllPosts() {
 }
 
 function getMyPosts() {
-  return prisma.post.findMany((author_id = 1));
+  return prisma.post.findMany({
+    where: {
+      author_id: 2,
+    },
+  });
 }
 
 function addNewPost(metadata) {
