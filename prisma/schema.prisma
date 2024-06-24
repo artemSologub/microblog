@@ -25,8 +25,8 @@ model Post {
   content         String
   date_creation   DateTime  @default(now())
 
-  author_id       Int?
-  authorname      Author?   @relation(fields: [author_id], references: [id])
+  author_id       Int
+  authorname      Author    @relation(fields: [author_id], references: [id])
   
   comments        Comment[]
 }
@@ -36,6 +36,6 @@ model Comment {
   content         String
   date_creation   DateTime  @default(now())
 
-  post_id         Int?
-  post            Post?     @relation(fields: [post_id], references: [id])
+  post_id         Int
+  post            Post      @relation(fields: [post_id], references: [id])
 }
