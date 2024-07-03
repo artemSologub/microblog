@@ -52,7 +52,12 @@ pagesRouter
     pagesController.fetchMyPosts,
     pagesController.renderPage('myposts')
   )
-  .post(formDataParser, pagesController.addNewPost, formErrorHandler);
+  .post(
+    formDataParser,
+    pagesController.addNewPost,
+    formErrorHandler,
+    pagesController.renderPage('myposts')
+  );
 
 // pagesRouter.get('/admin-page', (_req, resp) => {
 //   resp.render('index', {});

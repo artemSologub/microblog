@@ -8,19 +8,19 @@ const prisma = new PrismaClient();
 const { NotFoundError } = require('../errors');
 
 function getAllPosts() {
-  return prisma.post.findMany();
+  return prisma.post.findMany({
+    include: { author: true },
+  });
 }
 
-function getMyPosts() {
+function getMyPosts(author_id) {
   return prisma.post.findMany({
-    where: {
-      author_id: 7,
-    },
+    where: { author_id },
+    include: { author: true },
   });
 }
 
 function addNewPost(metadata) {
-  metadata.author_id = Number(metadata.author_id);
   return prisma.post.create({ data: metadata });
 }
 

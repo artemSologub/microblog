@@ -26,7 +26,7 @@ model Post {
   date_creation   DateTime  @default(now())
 
   author_id       Int
-  authorname      Author    @relation(fields: [author_id], references: [id])
+  author          Author    @relation(fields: [author_id], references: [id])
   
   comments        Comment[]
 }
