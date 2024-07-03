@@ -3,11 +3,11 @@ extends layout
 block content
   h3.padded Add New Post
   form(method="POST")
-    .group
-      label(for="author_id") Author ID
-      input(type="number" placeholder="enter the author" name="author_id" value=data && data.author_id required)
-      if errors && errors.author_id
-        #titleError.error= errors.author_id
+    //- .group
+    //-   label(for="author_id") Author ID
+    //-   input(type="number" placeholder="enter the author" name="author_id" value=data && data.author_id required)
+    //-   if errors && errors.author_id
+    //-     #titleError.error= errors.author_id
     .group
       label(for="content") Content
       input(type="text" placeholder="Post content" name="content" value=data && data.content(value="")  required)
@@ -19,6 +19,6 @@ block content
   .content 
       each post in locals.postList
         .post  
-          .post-author= post.author_id 
+          .post-author= post.author.authorname 
           .post-content= post.content  
           .post-date-created= post.date_creation 

@@ -8,7 +8,7 @@ function addPageContext(req, resp, next) {
   };
 
   const userMark = isLoggedIn
-    ? `${req.__pageContext.role} ${req.session.context.username}`
+    ? `${req.__pageContext.role} ${req.session.context.authorname}`
     : 'unauthorized';
   console.log(`page access from [${userMark}]`);
 
@@ -39,19 +39,20 @@ async function fetchAllPosts(req, _resp, next) {
 }
 
 async function fetchMyPosts(req, _resp, next) {
-  const postList = await postService.getMyPosts(req);
+  const postList = await postService.getMyPosts(req.session.context.author_id);
 
   req.__pageContext.postList = postList;
 
   next();
 }
 
-async function addNewPost(req, _resp, next) {
+async function addNewPost(req, resp, next) {
   try {
     await postService.addNewPost({
       ...req.body,
+      author_id: req.session.context.author_id,
     });
-    next();
+    resp.redirect(req.baseUrl || '/my-posts');
   } catch (err) {
     next(err);
   }

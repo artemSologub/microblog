@@ -29,7 +29,7 @@ async function logAuthorIn(req, resp, next) {
   //! 3. if we are here - creds are OK
   const role = author.role || ROLES.user;
   // req.__authContext.isLoggedIn = true;
-  req.__authContext = { authorname, role };
+  req.__authContext = { authorname, role, author_id: author.id };
   console.log(`author [${authorname}] - successfully logged in`);
 
   next();

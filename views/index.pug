@@ -8,7 +8,7 @@ block content
     .content 
       each post in locals.postList
         .post  
-          .post-author= post.author_id 
+          .post-author= post.author.authorname
           .post-content= post.content  
           .post-date-created= post.date_creation 
           //- .post-comments
