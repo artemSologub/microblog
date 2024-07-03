@@ -1,5 +1,20 @@
 const postService = require('../services/post_service');
 
+function addPageContext(req, resp, next) {
+  const isLoggedIn = !!req.session?.context?.role;
+  req.__pageContext = {
+    isLoggedIn,
+    role: req.session?.context?.role,
+  };
+
+  const userMark = isLoggedIn
+    ? `${req.__pageContext.role} ${req.session.context.username}`
+    : 'unauthorized';
+  console.log(`page access from [${userMark}]`);
+
+  next();
+}
+
 function renderPage(templateName) {
   return (req, resp) => {
     resp.render(templateName, req.__pageContext);
@@ -24,7 +39,7 @@ async function fetchAllPosts(req, _resp, next) {
 }
 
 async function fetchMyPosts(req, _resp, next) {
-  const postList = await postService.getMyPosts();
+  const postList = await postService.getMyPosts(req);
 
   req.__pageContext.postList = postList;
 
@@ -43,6 +58,7 @@ async function addNewPost(req, _resp, next) {
 }
 
 module.exports = {
+  addPageContext,
   renderPage,
   fetchAllPosts,
   fetchMyPosts,
