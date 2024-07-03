@@ -6,6 +6,8 @@ const { authorValidator } = require('../middleware/validators');
 const {
   authMakeSessionAndRedirect,
   authDestroySession,
+  restrictedResource,
+  ROLES,
 } = require('../middleware/auth_context');
 const {
   logAuthorIn,
@@ -35,6 +37,8 @@ async function formErrorHandler(err, req, resp, next) {
   next(err);
 }
 
+pagesRouter.use(pagesController.addPageContext);
+
 pagesRouter.get(
   '/',
   pagesController.fetchAllPosts,
@@ -43,8 +47,11 @@ pagesRouter.get(
 
 pagesRouter
   .route('/my-posts')
-  //.all(pagesController.fetchMyPosts)
-  .get(pagesController.fetchMyPosts, pagesController.renderPage('myposts'))
+  .get(
+    restrictedResource([ROLES.user]),
+    pagesController.fetchMyPosts,
+    pagesController.renderPage('myposts')
+  )
   .post(formDataParser, pagesController.addNewPost, formErrorHandler);
 
 // pagesRouter.get('/admin-page', (_req, resp) => {
@@ -58,7 +65,7 @@ pagesRouter
     formDataParser,
     authorValidator,
     logAuthorIn,
-    authMakeSessionAndRedirect(),
+    authMakeSessionAndRedirect('/'),
     formErrorHandler,
     pagesController.renderPage('login')
   );
@@ -70,7 +77,7 @@ pagesRouter
     formDataParser,
     authorValidator,
     createAuthorAccount,
-    authMakeSessionAndRedirect(),
+    authMakeSessionAndRedirect('/'),
     formErrorHandler,
     pagesController.renderPage('signup')
   );

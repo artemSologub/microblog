@@ -14,7 +14,7 @@ function getAllPosts() {
 function getMyPosts() {
   return prisma.post.findMany({
     where: {
-      author_id: 2,
+      author_id: 7,
     },
   });
 }

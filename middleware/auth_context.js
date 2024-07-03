@@ -1,24 +1,9 @@
-const SESSION_COOKIE_NAME = 'microblog';
-/**
- * Adds auth contexts __authContext and __pageContext to the request.
- * __authContext contains values related to user authorization in general, PAGES and API
- * __pageContext has values required for PAGES rendering only
- */
-function authContextParser(req, resp, next) {
-  //! now, the fact we HAVE this cookie is enough to say it's
-  //! a valid, logged in user
-  const isLoggedIn = !!req.cookies[SESSION_COOKIE_NAME];
+const { session: sessionConfig } = require('config');
 
-  req.__authContext = {
-    isLoggedIn,
-  };
-
-  req.__pageContext = {
-    isLoggedIn,
-  };
-
-  next();
-}
+const ROLES = {
+  admin: 'admin',
+  user: 'user',
+};
 
 /**
  * Creates middleware which makes new user session and then
@@ -27,16 +12,11 @@ function authContextParser(req, resp, next) {
  */
 function authMakeSessionAndRedirect(redirectTo) {
   return (req, resp) => {
-    const cookieOptions = {
-      httpOnly: true, // not available to client js
-      secure: true, // via HTTPS only (or localhost)
-      sameSite: 'strict', // only for req from OUR client to OUR backend
-      // strict - auth, sessions...
-      // lax - promo blocks, visual sections.. !!! NOT SESSION STATE
-    };
-
-    resp.cookie(SESSION_COOKIE_NAME, true, cookieOptions);
-    resp.redirect(redirectTo || '/');
+    console.log(
+      `Creating session for [${req.__authContext.role}] [${req.__authContext.authorname}]`
+    );
+    req.session.context = req.__authContext;
+    resp.redirect(redirectTo || req.baseUrl);
   };
 }
 
@@ -44,12 +24,39 @@ function authMakeSessionAndRedirect(redirectTo) {
  * Destroy user session and redirect to index page
  */
 function authDestroySession(req, resp) {
-  resp.clearCookie(SESSION_COOKIE_NAME);
-  resp.redirect('/login');
+  // resp.clearCookie(SESSION_COOKIE_NAME);
+  // resp.redirect('/login');
+  const { role, username } = req.session.context;
+  req.session.destroy(() => {
+    console.log(`Session for [${role}] [${username}] terminated`);
+
+    resp.clearCookie(sessionConfig.cookieName);
+    resp.redirect('/');
+  });
+}
+
+/**
+ * Creates middleware which restricts access to a resource,
+ * allowing access only for specified ROLES
+ * @param {ROLES[]} availableForRoles
+ */
+function restrictedResource(availableForRoles = []) {
+  return (req, resp, next) => {
+    const { role = 'unauthorised' } = req.session?.context || {};
+    if (availableForRoles.includes(req.session?.context?.role)) {
+      return next();
+    }
+
+    // if no session - redirect back to home
+    console.log(`Resource is unavailable for [${role}]!`);
+    resp.redirect(`${req.baseUrl}/login`);
+  };
 }
 
 module.exports = {
-  authContextParser,
+  // authContextParser,
   authMakeSessionAndRedirect,
   authDestroySession,
+  restrictedResource,
+  ROLES,
 };

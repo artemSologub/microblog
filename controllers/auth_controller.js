@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 
 const { AuthError } = require('../errors');
+const { ROLES } = require('../middleware/auth_context');
 const authorService = require('../services/author_service');
 
 async function logAuthorIn(req, resp, next) {
@@ -26,7 +27,9 @@ async function logAuthorIn(req, resp, next) {
   }
 
   //! 3. if we are here - creds are OK
-  req.__authContext.isLoggedIn = true;
+  const role = author.role || ROLES.user;
+  // req.__authContext.isLoggedIn = true;
+  req.__authContext = { authorname, role };
   console.log(`author [${authorname}] - successfully logged in`);
 
   next();
@@ -38,17 +41,14 @@ async function createAuthorAccount(req, resp, next) {
   const salt = await bcrypt.genSalt(10);
   const hashedPass = await bcrypt.hash(password, salt);
 
-  console.log('authorname', authorname);
-  console.log('password', password);
-  console.log('salt', salt);
-  console.log('hashedPass', hashedPass);
-
   try {
+    const role = ROLES.user;
     const newAuthor = await authorService.saveNewAuthor({
       authorname,
       hashedPass,
+      role,
     });
-    req.__authContext.isLoggedIn = true;
+    req.__authContext = { authorname, role };
     console.log(
       `author [${newAuthor.authorname}] - successfully created new account`
     );
