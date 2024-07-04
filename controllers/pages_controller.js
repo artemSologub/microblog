@@ -58,10 +58,21 @@ async function addNewPost(req, resp, next) {
   }
 }
 
+async function deletePost(req, resp, next) {
+  const id = Number(req.params.id);
+  try {
+    await postService.deletePost(id);
+    resp.redirect(req.baseUrl || '/my-posts');
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   addPageContext,
   renderPage,
   fetchAllPosts,
   fetchMyPosts,
   addNewPost,
+  deletePost,
 };

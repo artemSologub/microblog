@@ -59,6 +59,10 @@ pagesRouter
     pagesController.renderPage('myposts')
   );
 
+pagesRouter
+  .route('/my-posts/:id')
+  .delete(pagesController.deletePost, pagesController.renderPage('myposts'));
+
 // pagesRouter.get('/admin-page', (_req, resp) => {
 //   resp.render('index', {});
 // });
