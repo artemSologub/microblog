@@ -1,11 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
-const {
-  PrismaClientKnownRequestError,
-} = require('@prisma/client/runtime/library');
 
 const prisma = new PrismaClient();
-
-const { NotFoundError } = require('../errors');
 
 function getAllPosts() {
   return prisma.post.findMany({
@@ -27,18 +22,6 @@ function addNewPost(metadata) {
 function deletePost(postId) {
   return prisma.post.delete({ where: { id: postId } });
 }
-
-// async function deletePostById(postId) {
-//   try {
-//     return await prisma.post.delete({ where: { id: postId } });
-//   } catch (err) {
-//     // transforming Prisma-specific error "no item to delete" into something more generic
-//     if (err instanceof PrismaClientKnownRequestError && err.code === 'P2025') {
-//       throw new NotFoundError({ msg: 'Video not found' });
-//     }
-//     throw err;
-//   }
-// }
 
 module.exports = {
   getAllPosts,
