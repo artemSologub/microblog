@@ -39,11 +39,15 @@ async function formErrorHandler(err, req, resp, next) {
 
 pagesRouter.use(pagesController.addPageContext);
 
-pagesRouter.get(
-  '/',
-  pagesController.fetchAllPosts,
-  pagesController.renderPage('index')
-);
+pagesRouter
+  .route('/')
+  .get(pagesController.fetchAllPosts, pagesController.renderPage('index'))
+  .post(
+    formDataParser,
+    pagesController.addNewComment,
+    formErrorHandler,
+    pagesController.renderPage('/')
+  );
 
 pagesRouter
   .route('/my-posts')
