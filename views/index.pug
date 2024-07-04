@@ -11,19 +11,21 @@ block content
           .post-author= post.author.authorname
           .post-content= post.content  
           .post-date-created= post.date_creation 
-          //- .post-comments
-          //-   each comment in locals.post.comments
-          //-     .comment
+          hr.separator
 
-
-    //- table.mainTable
-    //-   thead
-    //-     each headerItem in ["Content", "Creation Date", "Author ID"]
-    //-       th(class=headerItem.toLowerCase())= headerItem
-    //-   tbody
-    //-     each post in locals.postList
-    //-       tr            
-    //-         td= post.content
-    //-         td= post.date_creation
-    //-         td= post.author_id
-
+          form(method="POST")
+            .group
+              input(type="text" placeholder="Add comment here..." name="content" value=data && data.content(value="")  required)
+              input(type="number" style="display: none" name="post_id" value=post.id  required)
+              if errors && errors.content
+                #titleError.error= errors.content
+              button(type="submit") Add
+          .post-comments
+            if post.comments.length
+              each comment in post.comments
+                .comment-wrapper
+                  .comment
+                    .comment-author= comment.author.authorname
+                    .comment-content= comment.content
+                  .comment-date-creation= comment.date_creation
+                  

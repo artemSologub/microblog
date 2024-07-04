@@ -48,7 +48,8 @@ async function createAuthorAccount(req, resp, next) {
       hashedPass,
       role,
     });
-    req.__authContext = { authorname, role };
+    const author = await authorService.findByAuthorName(authorname);
+    req.__authContext = { authorname, role, author_id: author.id };
     console.log(
       `author [${newAuthor.authorname}] - successfully created new account`
     );

@@ -18,6 +18,7 @@ model Author {
   authorname      String    @unique
   password_hash   String              
   posts           Post[]
+  comments        Comment[]
 }
 
 model Post {
@@ -37,5 +38,8 @@ model Comment {
   date_creation   DateTime  @default(now())
 
   post_id         Int
+  author_id       Int
+  
   post            Post      @relation(fields: [post_id], references: [id])
+  author          Author    @relation(fields: [author_id], references: [id])
 }
