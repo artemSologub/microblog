@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h3 Please type your user data
+  form(method="POST")
+    .group
+      label(for="authorname") Author Name
+      input(type="text", name="authorname", placeholer="Author Name" value=data && data.authorname required)
+      if errors && errors.authorname
+        #usernameError.error= errors.authorname
+    .group
+      label(for="password") Password
+      input(type="password", name="password" required)
+      if errors && errors.password
+        #usernameError.error= errors.password
+    if errors && errors.auth
+      #authError.error=errors.auth
+    button(type="submit") Create my account

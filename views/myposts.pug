@@ -1,0 +1,44 @@
+extends layout
+
+block content
+  h3.padded Add New Post
+  form(method="POST")
+    .group
+      label(for="content") Content
+      input(type="text" placeholder="Post content" name="content" value=data && data.content(value="")  required)
+      if errors && errors.content
+        #titleError.error= errors.content
+
+    button(type="submit") Save New POST
+
+  .content 
+      each post in locals.postList
+        .post  
+          .post-author= post.author.authorname 
+          .post-content= post.content  
+          .post-date-created= post.date_creation           
+          button.delete-button(data-id=post.id) Delete
+          //- button.delete#delete(data-id=post.id) Delete post
+
+  script.
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.delete-button').forEach(function(button) {
+          button.addEventListener('click', function(event) {
+            event.preventDefault();
+            const itemId = this.getAttribute('data-id');
+            fetch(`/my-posts/${itemId}`, {
+              method: 'DELETE'
+            })
+            .then(response => {
+              if (response.ok) {
+                window.location.reload();
+              } else {
+                return response.text().then(text => { throw new Error(text) });
+              }
+            })
+            .catch(error => {
+              alert('Failed to delete item: ' + error.message);
+            });
+          });
+        });
+      });
