@@ -1,4 +1,19 @@
 services:
+  server:
+    build:
+      context: .
+    environment:
+      NODE_ENV: production
+      DATA_SOURCE: db
+      SESSION_SECRET: '1some_session-secret1'
+      DATABASE_URL: postgresql://postgres:pass@localhost:5432/microblogdb
+    ports:
+      - 3333:3333
+    volumes:
+      - ./prisma:/usr/src/app/prisma:rw
+    depends_on:
+      db:
+        condition: service_healthy
   db:
     image: postgres
     restart: always
